@@ -46,3 +46,4 @@ These are potential ways this mod can go. Do not treat any of these as promises 
 
 - Same thing but with shrapnel in torso?
 - Same thing but with lodged bullets in torso?
+- Same thing but with glass while crawling?
