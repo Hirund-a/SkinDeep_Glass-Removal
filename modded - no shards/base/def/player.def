@@ -1,0 +1,981 @@
+
+model model_ninav2
+{
+    skin                                skins/player/ninva2_skin_armsnone
+    overrideSkinInSubview				skins/player/ninva2_skin_armsboth.skin // SW: Always render arms in subviews (mirrors, cameras, etc)
+    
+    offset								( -7 0 0 )
+    mesh								models/player/ninav2.md5mesh
+    
+    channel torso						( body *spine1 )
+	channel legs						( *origin -body -*spine1 )
+	
+	anim af_pose						models/player/nina_default.md5anim
+	anim ik_pose						models/player/nina_default.md5anim
+	anim initial						models/player/nina_default.md5anim
+	anim idle							models/player/nina_unarmed_idle.md5anim
+	
+    anim walk_forward					models/player/nina_jog_forward.md5anim
+    {
+        framechannel                    legs // sets the anim channel for frame commands
+
+        frame   1                       leftfoot
+        frame   7                       rightfoot
+        frame   14                      leftfoot        
+    }
+	
+    anim walk_backward					models/player/nina_jog_backward.md5anim
+    {
+        framechannel                    legs
+
+        frame   1                       leftfoot
+        frame   7                       rightfoot
+        frame   14                      leftfoot        
+    }
+    
+	anim walk_left						models/player/nina_jog_forward.md5anim
+    {
+        framechannel                    legs
+
+        frame   1                       leftfoot
+        frame   7                       rightfoot
+        frame   14                      leftfoot        
+    }
+    
+	anim walk_right						models/player/nina_jog_forward.md5anim
+    {
+        framechannel                    legs
+
+        frame   1                       leftfoot
+        frame   7                       rightfoot
+        frame   14                      leftfoot
+    }	
+	
+	anim crawl_idle						models/player/nina_crawl_idle.md5anim
+    anim crawl_forward                  models/player/nina_crawl_forward.md5anim
+    
+    anim stroll_forward					models/player/nina_walk_forward.md5anim
+    {
+        framechannel                    legs
+
+        frame   8                       rightfoot
+        frame   23                      leftfoot        
+    }
+	
+    // ---- P A I N / H E A L T H   S T A T E S ----
+    
+	anim pain							models/player/nina_pain.md5anim
+	{
+		prevent_idle_override
+	}
+	
+    
+    anim heal_glasswound_lean           models/player/nina_glasswound_lean.md5anim
+    anim heal_glasswound_lean_yank      models/player/nina_glasswound_yank.md5anim
+	{
+        framechannel                    torso // sets the channel for frame commands
+	}
+	
+	// SW 7th April 2025: stealing the bulletpluck anim and changing the frame events so we can use it for glass
+	anim heal_glasswound_crawl_yank		models/player/Nina_heal_bulletpluck_crawl.md5anim
+	{
+		framechannel                    torso // sets the channel for frame commands
+
+        frame 29                        glassyank
+	}
+	
+    anim heal_burning					models/player/Nina_heal_burning.md5anim
+	{
+        framechannel                    torso
+
+		frame 1							fx fx/fire_armfire
+		frame 2							fx fx/fire_handfire
+	}
+    
+    anim heal_burning_crawl             models/player/Nina_heal_burning_crawl.md5anim
+	{
+        framechannel                    torso
+
+		frame 1							fx fx/fire_armfire
+		frame 2							fx fx/fire_handfire
+	}
+    
+    anim heal_bulletpluck               models/player/Nina_heal_bulletpluck.md5anim
+    {
+        framechannel                    torso
+
+        frame 17                        sound_body3 impact_gut
+        frame 29                        healwound bullet
+        frame 30                        sound_body2 whoosh
+    }
+    
+    anim heal_bulletpluck_crawl         models/player/Nina_heal_bulletpluck_crawl.md5anim
+    {
+        framechannel                    torso
+
+        frame 17                        sound_body3 impact_gut
+        frame 29                        healwound bullet
+        frame 30                        sound_body2 whoosh
+    }    
+    
+    anim heal_shrapnel                  models/player/Nina_heal_shrapnel.md5anim
+    {
+        framechannel                    torso
+
+        frame 12                        sound_body3 impact_biggut
+        frame 14                        camspurt blood_spritz2.prt
+        frame 51                        healwound shrapnel
+        frame 52                        sound_body2 whoosh
+    }
+    
+    anim heal_shrapnel_crawl            models/player/Nina_heal_shrapnel_crawl.md5anim
+    {
+        framechannel                    torso
+
+        frame 20                        sound_body3 impact_biggut
+        frame 20                        camspurt blood_spritz2.prt
+        frame 51                        healwound shrapnel
+        frame 52                        sound_body2 whoosh
+    }
+    
+    
+    anim fallen_idle                    models/player/Nina_fallen_idle.md5anim
+    
+    
+    anim fallen_rollleft                models/player/Nina_fallen_rollleft.md5anim
+    {
+        framechannel                    torso
+
+        frame 1                         sound_body shuffle
+        frame 1                         fx fx/smoke_ring07
+        
+        frame 5                         sound_body shuffle
+        frame 5                         fx fx/smoke_ring07
+        
+        frame 11                        sound_body shuffle
+        frame 11                        fx fx/smoke_ring07
+    }
+	anim fallen_rollright               models/player/Nina_fallen_rollright.md5anim
+    {
+        framechannel                    torso
+
+        frame 1                         sound_body shuffle
+        frame 1                         fx fx/smoke_ring07
+        
+        frame 5                         sound_body shuffle
+        frame 5                         fx fx/smoke_ring07
+        
+        frame 11                        sound_body shuffle
+        frame 11                        fx fx/smoke_ring07
+    }
+    
+    //Lying on back, shuffling forward
+	anim fallen_walk_forward			models/player/Nina_fallen_walk_forward.md5anim
+    {
+        framechannel                    legs
+
+        frame 2                         sound_body shuffle
+        frame 2                         fx fx/smoke_ring07
+    }
+    
+    //Lying on back, shuffling backward
+	anim fallen_walk_backward			models/player/Nina_fallen_walk_backward.md5anim
+    {
+        framechannel                    legs
+
+        frame 2                         sound_body shuffle
+        frame 2                         fx fx/smoke_ring07
+    }
+    
+    //Do a kickflip to stand back up
+    anim fallen_getup                   models/player/Nina_fallen_getup.md5anim
+    {
+        framechannel                    legs
+
+        frame 4                         sound_body rustle
+        frame 22                        sound_body getup
+    }
+    
+    
+    anim defib_fall                     models/player/Nina_defib_fall.md5anim
+    anim defib_getup                    models/player/Nina_defib_getup.md5anim
+    {
+        framechannel                    legs 
+
+        frame 2                         sound_vo snd_defibgasp 3 //VO_CATEGORY_HITREACTION
+    }    
+    
+	
+    // ---- A C R O B A T I C S ----
+    
+	anim acro_ceilinghide				models/player/nina_acro_ceilinghide.md5anim
+	anim acro_splits					models/player/nina_acro_splits.md5anim
+    anim acro_splits_flipdown			models/player/nina_unarmed_idle.md5anim
+    anim acro_splits_downidle           models/player/nina_unarmed_idle.md5anim   
+    
+    
+    // ---- J O C K E Y    A N I M S ----    
+
+    //player jumps forward and mounts a baddie.
+    anim jockey_mount                   models/player/nina_jockey_mount.md5anim
+    anim jockey_slam                    models/player/nina_jockey_exec_fwd.md5anim
+    {
+        //frame 1                         particle head   attack_warning2.prt
+        frame 15                        jockeyslam //do damage.
+    }
+
+    //idle of jockey-riding someone.
+    anim jockey_idle                    models/player/nina_jockey_idle.md5anim
+
+    
+    anim jockey_back_16                 models/player/nina_jockey_back_16.md5anim
+    anim jockey_back_64                 models/player/nina_jockey_back_64.md5anim
+    anim jockey_back_128                models/player/nina_jockey_back_128.md5anim
+    anim jockey_fwd_32                  models/player/nina_jockey_fwd_32.md5anim
+    anim jockey_fwd_96                  models/player/nina_jockey_fwd_96.md5anim
+    anim jockey_left_32                 models/player/nina_jockey_left_32.md5anim    
+    anim jockey_left_96                 models/player/nina_jockey_left_96.md5anim
+    anim jockey_right_32                models/player/nina_jockey_right_32.md5anim    
+    anim jockey_right_96                models/player/nina_jockey_right_96.md5anim
+	
+	// ---- W E A P O N    A N I M S ----
+    
+    anim unarmed_raise				    models/player/nina_unarmed_idle.md5anim
+    anim unarmed_lower				    models/player/nina_unarmed_idle.md5anim
+	anim unarmed_idle				    models/player/nina_unarmed_idle.md5anim
+	anim unarmed_aim					models/player/nina_unarmed_idle.md5anim
+	anim unarmed_reload					models/player/nina_unarmed_idle.md5anim
+	
+	anim autopistol_raise				models/player/nina_autopistol_aim.md5anim
+    anim autopistol_lower				models/player/nina_autopistol_aim.md5anim
+	anim autopistol_idle				models/player/nina_autopistol_aim.md5anim,models/player/nina_autopistol_aim.md5anim,models/player/nina_autopistol_aim.md5anim
+	anim autopistol_aim					models/player/nina_autopistol_aim.md5anim
+	anim autopistol_reload				models/player/nina_autopistol_aim.md5anim	
+	
+	anim rifle_raise					models/player/nina_rifle_aim.md5anim
+    anim rifle_lower					models/player/nina_rifle_aim.md5anim
+	anim rifle_idle						models/player/nina_rifle_aim.md5anim,models/player/nina_rifle_aim.md5anim,models/player/nina_rifle_aim.md5anim
+	anim rifle_aim						models/player/nina_rifle_aim.md5anim
+	anim rifle_reload					models/player/nina_rifle_aim.md5anim	
+	
+	anim shotgun_raise					models/player/nina_rifle_aim.md5anim
+    anim shotgun_lower					models/player/nina_rifle_aim.md5anim
+	anim shotgun_idle					models/player/nina_rifle_aim.md5anim,models/player/nina_rifle_aim.md5anim,models/player/nina_rifle_aim.md5anim
+	anim shotgun_aim					models/player/nina_rifle_aim.md5anim
+	anim shotgun_reload					models/player/nina_rifle_aim.md5anim	
+	
+	anim signallamp_raise				models/player/nina_autopistol_aim.md5anim
+    anim signallamp_lower				models/player/nina_autopistol_aim.md5anim
+	anim signallamp_idle				models/player/nina_autopistol_aim.md5anim,models/player/nina_autopistol_aim.md5anim,models/player/nina_autopistol_aim.md5anim
+	anim signallamp_aim					models/player/nina_autopistol_aim.md5anim
+	anim signallamp_reload				models/player/nina_autopistol_aim.md5anim	
+    
+    anim raise				            models/player/nina_unarmed_idle.md5anim
+	anim lower				            models/player/nina_unarmed_idle.md5anim
+    anim reload				            models/player/nina_unarmed_idle.md5anim
+    
+    
+	// ---- MISC / SCRIPTED ----
+    
+    
+	anim flail							models/player/nina_flail.md5anim
+	
+    
+    anim removemask                     models/player/nina_removemask.md5anim
+	anim nina_telescope_react			models/player/nina_telescope_react_nina.md5anim
+	anim zena_telescope_react			models/player/zena_telescope_react_zena.md5anim
+    anim nina_telescope_idle            models/player/nina_telescope_idle.md5anim
+    
+	
+	
+	anim prismblast01                   models/player/nina_prismblast01.md5anim
+	
+    anim jump_land                      models/player/nina_jump_land.md5anim
+	anim wrestlejump1					models/player/nina_wrestle_jump1.md5anim
+	anim wrestlejump2					models/player/nina_wrestle_jump2.md5anim
+    anim wrestlejump2_nomove			models/player/nina_wrestle_jump2_nomove.md5anim
+	anim wrestleTEST					models/player/nina_wrestle.md5anim
+	anim wrestleswordpain				models/player/zena_wrestle_swordpain.md5anim
+	anim wrestlefall					models/player/nina_wrestle_fall.md5anim
+    anim wrestlefall_nomove				models/player/nina_wrestle_fall_nomove.md5anim
+    
+    anim wrestle01                      models/player/nina_wrestle_01.md5anim
+    anim wrestle02                      models/player/nina_wrestle_02.md5anim
+    anim wrestle03                      models/player/nina_wrestle_03.md5anim
+    anim wrestle04                      models/player/nina_wrestle_04.md5anim
+    anim wrestle04a                     models/player/nina_wrestle_04a.md5anim
+    
+
+    anim nina_wrestlefall_handgrab_zena models/player/nina_wrestlefall_handgrab_zena.md5anim
+    anim nina_wrestlefall_handgrab_nina models/player/nina_wrestlefall_handgrab_nina.md5anim
+    
+    
+    
+    anim nina_wrestlefall_handrecede_zena   models/player/nina_wrestlefall_handrecede_zena.md5anim
+    anim nina_wrestlefall_handrecede_nina   models/player/nina_wrestlefall_handrecede_nina.md5anim
+    
+    
+	
+	anim wrestle						models/player/nina_flail.md5anim
+	anim zena_armgrab					models/player/nina_flail.md5anim
+	anim zena_float_transition			models/player/nina_flail.md5anim
+    anim zena_cosmic_float              models/player/nina_cosmic_float.md5anim
+	
+    anim beachchair                     models/player/nina_beachchair.md5anim
+	
+	
+	anim converse01						models/player/nina_converse_01.md5anim
+	anim converse02						models/player/nina_converse_02.md5anim
+	anim converse03						models/player/nina_converse_03.md5anim
+}
+
+
+
+
+entityDef player_doommarine_ragdoll
+{
+    "editor_visibility"             "hidden"
+	"spawnclass"   					"idActor"
+	"scriptobject" 					"player"
+	"model"							"model_ninav2"
+    "health"                        "50"
+    "maxHealth"                     "50"
+    "armor"                         "0"
+    "maxarmor"                      "10"
+    "bleed"							"1"
+	"ragdoll"						"char_player"
+    "gib"                           "1"
+    "cinematic"                     "1"
+    
+    // ================= BODY PARTS =================
+    
+	"bone_focus"					"camera"
+	"bone_hips"						"body"
+	"bone_chest"					"chest"
+	"bone_head"						"head"
+	"bone_lfoot"					"l_toes"
+	"bone_rfoot"					"r_toes"
+	"bone_lankle"					"l_foot"
+	"bone_rankle"					"r_foot"
+
+    //"def_head"						"head_player"
+    "head_joint"                    "spine2"
+    "copy_joint spine2"             "origin"
+    "copy_joint neck"	    		"neck"
+	"copy_joint head"   			"head"
+	
+	"dynamicSpectrum"	"1"
+	"noFrustumCull"		"1"
+}
+
+entityDef player_doommarine
+{
+    "editor_visibility"             "hidden"
+	"spawnclass"   					"idPlayer"
+	"scriptobject" 					"player"
+	"hud"							"guis/hud.gui"
+    "cursor"						"guis/cursor.gui"	
+	"model"							"model_ninav2"
+    "health"                        "50"
+    "maxHealth"                     "50"
+    "armor"                         "0"
+    "maxarmor"                      "10"
+    "bleed"							"1"
+	"ragdoll"						"char_pirate"
+    "gib"                           "1"    
+    "cinematic"                     "1"
+    "zerog"                         "1"
+    "displayname"                   "#str_speaker_nina" /*Nina*/
+    
+	"def_spit"						"projectile_spit"
+	"def_bloodspit"					"projectile_bloodspit"
+    "def_bulletpluck"               "moveable_pluckedbullet" //what gets yanked out when bulletwound is healed
+    "def_shrapnelpluck"             "moveable_pluckedshrapnel"
+    "def_glasspluck"                "debris_footshard"    
+    "def_smellyinterest"            "interest_smelly"
+    "def_smellyinterest_vent"       "interest_smelly_vent"    
+    "def_jockeyfaildamage"			"damage_knockdown" //what damage is applied when player is kicked off during a jockey
+    
+    "def_sneezeinterest"            "interest_sneeze"
+    "def_coughinterest"             "interest_gascough"
+    
+    "def_threaten"                  "interest_threaten"
+    "def_snapfingers"               "interest_snapfingers"
+    
+    "def_interest_fallhard"         "interest_itembounce" //BC 2-13-2025: interestpoint when doing a hard fall.
+    
+    "fx_pickpocket_fail"            "fx/pickpocket_fail"
+    "fx_pickpocket_success"         "fx/pickpocket_success"
+	
+	"fx_defibblast"					"fx/defibblastsound"
+    
+    
+    //When a zoominspect entity is hovered over.
+    "mtr_zoomselectordefault"       "guis/assets/zoominspect_selector"
+    
+    
+    //Marker for zoominspect entities. When Z is held down.
+    "mtr_zoommarkerdefault"         "guis/assets/zoominspect_marker"
+    
+    //Marker for zoominspect note entities.
+    "mtr_zoommarkernote"            "guis/assets/zoominspect_notemarker"
+    
+    //marker for note read notification.
+    "mtr_readnotification"          "guis/assets/read_notification"
+    
+    
+    "mtr_ingress"                   "guis/assets/icon_ingress"
+    "mtr_ingress_lock"              "guis/assets/icon_ingress_lock"
+    
+    "mtr_memp_crossout"             "guis/assets/memp_crossout"
+    
+    "mtr_dropicon"                  "guis/assets/icon_dropitem"
+    
+    "mtr_bloodfoot1"                "textures/decals/bloodfoot01"
+    "mtr_bloodfoot2"                "textures/decals/bloodfoot02"
+    
+    "mtr_screenfire"                "textures/fx/screenfire"
+    "mtr_zerog"                     "textures/fx/zerog"
+    "mtr_smelly"                    "textures/fx/smellyvignette"
+    
+    "fx_smellcloud"                 "fx/smell_trashcloud"
+    "fx_smellpurge"                 "fx/smell_purge"
+    "fx_bulletpluck"                "fx/bullet_bulletpluck"
+    
+    "mtr_sneezesplat"               "textures/decals/sneeze_splat"
+    "mtr_sneezesplat_blood"         "textures/decals/bloodsplat00"
+    "mtr_unseen"                    "guis/assets/vignette_unseen"
+    
+    "model_bloodspritz"             "blood_spritz2.prt"
+    "mtr_ventpeek"                  "textures/fx/ventpeek"
+    
+    "model_sneezeparticle"          "sneeze.prt"
+    "model_coughbloodparticle"      "coughblood.prt"
+    
+    "mtr_signal_lock"               "signallock"
+    "mtr_signal_scantriangle"       "scan_triangle"
+    "mtr_signal_scanbeacon"         "scan_beacon"
+    
+    "mtr_zoominspect_arrow"         "guis/assets/zoominspect_arrow"
+    "mtr_zoominspect_marker2"       "guis/assets/zoominspect_marker2"
+    
+    "skin_armsnone1"                "skins/player/skin_armsnone_feetbare"
+    "skin_armsnone2"                "skins/player/skin_armsboth_feetbare"
+    
+    "mtr_jockey_boomicon"           "guis/assets/jockey_boomicon"
+    "mtr_jockey_attractor"          "guis/assets/jockey_attractor"
+    
+    // ================= BODY PARTS =================
+    
+	//"head_joint"					"shoulders"
+	//"bone_focus"					"camera"
+	//"bone_hips"						"body"
+	//"bone_chest"					"chest"
+	//"bone_head"						"head"
+	//"bone_lfoot"					"lfoot"
+	//"bone_rfoot"					"rfoot"
+	//"bone_lankle"					"lankle"
+	//"bone_rankle"					"rankle"
+    //"def_head"						"head_player"    
+    //"copy_joint neck"	    		"neck"
+	//"copy_joint head"   			"head"  
+    
+    "bone_glassyank"                "l_toes"
+    "bone_bulletpluck"              "r_palm"
+    
+    //"head_joint"					"head"
+	"bone_focus"					"camera"
+	"bone_hips"						"body"
+	"bone_chest"					"spine1"
+	"bone_head"						"head"
+	"bone_lfoot"					"l_toes"
+	"bone_rfoot"					"r_toes"
+	"bone_lankle"					"l_foot"
+	"bone_rankle"					"r_foot"
+
+
+    //"def_head"                      "head_player"
+    "head_joint"                    "spine2"
+    "copy_joint spine2"             "origin"
+    "copy_joint neck"               "neck"
+    "copy_joint head"               "head"
+    
+
+
+   
+    
+    
+    // ================= DECALS =================
+    
+    "mtr_wound_flesh"				"textures/decals/bodywound"     //blood decals on your body.
+    "mtr_splat_flesh"				"textures/decals/bloodsplat00"  //blood decals on nearby walls.
+    "smoke_wound_flesh"				"bullethit_flesh.prt"           //particle when damage is inflicted.
+    
+    // ================= SOUNDS =================
+    
+    "snd_slowmo"                    "slowmo"    
+    "snd_healthrecharge"            "healthrecharge"
+    "snd_bloodyfootstep"            "footstep_bloody"
+    "snd_staminarecharge"           "stamina_recharge"
+    
+    //"snd_footstep"                  "footstep_bloody"
+    "snd_footstep_glass"            "footstep_glass"
+    
+	"snd_sneeze"					"player_vo_sneeze"
+    "snd_cough"						"cough"
+    "snd_cough_gas"                 "cough_gas_player"
+	"snd_earringing"				"ear_ringing"
+    "snd_heartbeat"                 "heartbeat"    
+    "snd_death_fanfare"             "stinger01"	
+    "snd_pain_small"                "impact_flesh"
+    "snd_pain_medium"               "impact_flesh"
+    "snd_pain_large"                "player_vo_pain"
+    "snd_pain_huge"                 "player_vo_pain"    
+    "snd_hitArmor"                  "player_hitarmor"    
+    "snd_armorbreak"                "player_armorbreak"
+    "snd_enterbubble"               "baffler_enter"
+    "snd_exitbubble"                "baffler_exit"    
+    "snd_grab"                      "grab"
+    "snd_ungrab"                    "ungrab"
+    "snd_recompress"				"air_recompress"
+	"snd_decompress"				"air_decompress"
+	
+	"snd_noair"  					"air_vacuumbreath"	    
+    "snd_jump"						"jump"	    
+    "snd_dash"                      "dash"
+    "snd_cableascend"               "elevatorcable_ascend"
+    "snd_cabledescend"              "elevatorcable_descend"
+    "snd_lockon"                    "lock_on"
+    "snd_lockoff"                   "lock_off"
+    "snd_longfall"                  "longfall_impact"
+    "snd_error"                     "cancel2"    
+    "snd_cockpitmove"               "mech_stickmove"
+    "snd_mechcannon_lower"          "mechcannon_lower"
+    "snd_trasheject"                "trash_eject"
+    "snd_mechenter"                 "mech_enter"
+    
+    "snd_guienter"                  "rollover"
+    "snd_guiexit"                   "rollover"
+    
+    "snd_showenemyhealth"           "snap"
+    "snd_confinedlimit"				"jump"
+    "snd_confinedmove"              "bodyturn"
+    "snd_confinedtarp"              "rubbertarp"
+    
+    "snd_softfall"                  "softfall"
+    "snd_melee"                     "melee"
+    "snd_confinedenter"				"confine_enter"
+    "snd_confinedexit"				"confine_exit"
+    
+    "snd_bash"                      "bash"
+    
+    "snd_stealthenter"              "stealth_enter"
+    "snd_stealthexit"               "stealth_exit"
+    
+    "snd_click"                     "click1"
+    "snd_notification"              "notification"
+    
+    "snd_carryable_lean"            "shuffle_loud" //when leaning while holding a carryable, make a little noise of stowing the carrayble.
+    "snd_spectate_door"             "whoosh2" //when in spectator, player goes through door or window.
+    
+    "snd_zoomerror"					"zoom_error"
+	"snd_zoomstepout"				"zoomstep_out"
+	"snd_zoomstepin"				"zoomstep_in"
+	"snd_zoomin"					"zoomin"
+	"snd_zoomout"					"zoomout"    
+    
+    "snd_threat"                    "player_vo_threaten"    
+    "snd_snapfingers"               "player_fingersnap"
+    
+    "snd_defibgasp"                 "player_vo_defib"
+    "snd_defib"                     "defib_sequence"
+    
+    "snd_extinguish"                "extinguish_global"
+    
+    "snd_cancel"                    "cancel"
+    "snd_clamber"                   "clamber"
+    "snd_eat"                       "eat"
+    
+    "snd_pickpocket_stunned"        "pickpocket_1s"
+    "snd_pickpocket"                "pickpocket_7s"
+    "snd_pickpocket_paused"         "pickpocket_paused"
+    
+    
+
+    
+    
+    
+    "snd_memorypalace_on"           "memorypalace_on"
+    "snd_memorypalace_off"          "memorypalace_off"
+    
+    "snd_pain"                      "playerpain"
+    
+    
+    "snd_vo_pickup"                 "player_vo_pickup"
+    "snd_vo_pickup_skullsaver"      "player_vo_pickup_skullsaver"
+    
+    "snd_sneeze50"                  "player_vo_sneeze50"
+    "snd_sneeze75"                  "player_vo_sneeze75"
+    "snd_sneeze90"                  "player_vo_sneeze90"
+    
+    "snd_vo_idledowned"             "player_vo_idledowned" //idle vo when downed.
+    "snd_vo_bloodfill"              "player_vo_bloodfill" //when player uses bloodbag
+    "snd_vo_inflictdamage_loud"     "player_vo_inflictdamage_loud"
+    "snd_vo_inflictdamage_unseen"   "player_vo_inflictdamage_unseen"
+    "snd_vo_kill"                   "player_vo_kill"
+    "snd_vo_kill_opencombat"        "player_vo_kill_opencombat"
+    "snd_vo_kill_stealth"           "player_vo_kill_stealth"
+    "snd_vo_gun_noammo"             "player_vo_gun_noammo"
+    "snd_vo_gun_lowammo"            "player_vo_gun_lowammo"
+    "snd_vo_cat_release"            "player_vo_cat_release"
+    "snd_vo_cat_encourage"          "player_vo_cat_encourage"
+    "snd_vo_pounce"                 "player_vo_pounce"
+    "snd_vo_ammo_lot"               "player_vo_ammo_lot"
+    "snd_vo_ammo_several"           "player_vo_ammo_several"
+    "snd_vo_ammo_few"               "player_vo_ammo_few"
+    "snd_vo_ammo_none"              "player_vo_ammo_none"
+    "snd_vo_chamber_loaded"         "player_vo_chamber_loaded"
+    "snd_vo_chamber_empty"          "player_vo_chamber_unloaded"
+    
+    "snd_airtank"       			"player_vo_breathing"
+    
+    "snd_vo_spit"                   "player_vo_spit"
+    "snd_vo_spit_blood"             "player_vo_spit_blood"
+    
+    "snd_allclear"                  "player_vo_walkie_checkin"          //walkie talkie player checkin "Uhh, here"
+    "snd_vo_walkie_hijack_injured"  "player_vo_walkie_hijack_injured"   //walkie talkie player checkin, in injured state
+
+    "snd_impactcrouch"				"melee_shake"
+	"model_impactcrouch"			"dustfall01.prt"
+    
+    "model_defibparticle"           "electric_defib.prt"
+    
+    "snd_victorymusic"              "music_victory"
+    "snd_deathmusic"                "music_death"
+    "snd_vr_positive"               "vr_positive"
+    "snd_vr_complete"               "vr_complete"
+    
+    "snd_defibbutton"               "defib_button"
+    
+    
+    "snd_vo_reload"                 "player_vo_reload"
+    "snd_vo_reload_shotgun"         "player_vo_reload_shotgun"
+    
+    "snd_vo_jockeyattack"           "player_vo_inflictdamage_jockey" //when you initiate a jockey attack
+    
+    "snd_vo_catpod_response"        "player_vo_catpod_response"
+    
+    "snd_vo_throw_skull_space"      "player_vo_space_skull"
+    "snd_vo_trash_skull"            "player_vo_trash_skull"
+    "snd_vo_flush_skull"            "player_vo_flush_skull"
+    "snd_vo_see_skull"              "player_vo_sees_skullteleport"
+    
+    "snd_vo_clamber"                "player_vo_mantling"
+    "snd_vo_jumplanding"            "player_vo_jump_landing"
+    "snd_vo_exertion"               "player_vo_exertion" //jumping/clambering grunt when at low health.
+    
+    "snd_vo_throw"                  "player_vo_throw_effort"
+    
+    "snd_vo_ninaskullrespond"       "player_vo_skullsaver_talking" //nina reply to a skull "shut up", etc
+    
+    "model_soundwave"               "sound_burst_small2.prt"
+    "model_soundwave_faint"         "sound_burst_small2_faint.prt"
+    
+    
+    
+    // ================= END SOUNDS =====================
+    
+    // ================= WEAPONS / AMMO =================
+    
+    //Set ammo max & starting values.
+	"max_ammo_autobullets"			"300"
+	"ammo_autobullets"				"0"        // one magazine.
+    
+    "max_ammo_telegun"              "10"
+    "ammo_telegun"                  "0"
+    
+    "max_ammo_wiregrenade"          "10"
+    "ammo_wiregrenade"              "0"
+    
+    "max_ammo_shells"               "30"
+    "ammo_shells"                   "0"    
+    
+    "max_ammo_tnt"                  "10"
+    "ammo_tnt"                      "0"    
+    
+    "max_ammo_sonar"                "10"
+    "ammo_sonar"                    "0"    
+    
+    "max_ammo_chembomb"             "10"
+    "ammo_chembomb"                 "0"
+
+    "max_ammo_baffler"              "10"    
+    "ammo_baffler"                  "0"
+
+    "max_ammo_lighter"              "10"
+    "ammo_lighter"                  "0"
+    
+    "max_ammo_riflebullets"         "300"
+    "ammo_riflebullets"             "0"
+    
+    "max_ammo_mechcannon"           "999"
+    "ammo_mechcannon"               "10"
+    
+    "max_ammo_seekergrenade"        "10"
+    "ammo_seekergrenade"            "0"
+    
+    "max_ammo_hackgrenade"        "10"
+    "ammo_hackgrenade"            "0"
+    
+    
+  
+    //============================== WEAPON LIST ==============================
+    
+    //This list determines the weapon inventory slots.
+    
+    
+	"def_weapon0"					"weapon_unarmed" 
+	"weapon0_allowempty"			"1"
+	"weapon0_cycle"					"1"
+	
+	"def_weapon1"					"weapon_autopistol" 
+	"weapon1_allowempty"			"1"
+	"weapon1_cycle"					"1"
+    
+    "def_weapon2"					"weapon_telegun" 
+	"weapon2_allowempty"			"0"
+	"weapon2_cycle"					"1"
+    
+    "def_weapon3"					"weapon_wiregrenade"
+	"weapon3_allowempty"			"0"
+	"weapon3_cycle"					"1"
+    
+    "def_weapon4"					"weapon_tnt"
+	"weapon4_allowempty"			"0"
+	"weapon4_cycle"					"1"
+    
+    "def_weapon5"					"weapon_shotgun"
+	"weapon5_allowempty"			"1"
+	"weapon5_cycle"					"1"
+    "weapon5_magdisplay"            "0"
+    
+    "def_weapon6"					"weapon_sonar"
+	"weapon6_allowempty"			"0"
+	"weapon6_cycle"					"1"
+    
+    "def_weapon7"					"weapon_chembomb"
+	"weapon7_allowempty"			"0"
+	"weapon7_cycle"					"1"
+    
+    "def_weapon8"					"weapon_baffler"
+	"weapon8_allowempty"			"0"
+	"weapon8_cycle"					"1"
+    
+    "def_weapon9"					"weapon_lighter"
+	"weapon9_allowempty"			"0"
+	"weapon9_cycle"					"1"
+    
+    "def_weapon10"					"weapon_rifle"
+	"weapon10_allowempty"			"1"
+	"weapon10_cycle"				"1"
+    
+    "def_weapon11"                  "weapon_signallamp"
+    "weapon11_allowempty"           "1"
+    "weapon11_cycle"                "1"
+    
+    "def_weapon12"                  "weapon_mechcannon"
+    "weapon12_allowempty"           "1"
+    "weapon12_cycle"                "1"
+    
+    //spear is obsolete...
+    //"def_weapon13"                  "weapon_spear"
+    //"weapon13_allowempty"           "0"
+    //"weapon13_cycle"                "0"
+    
+    "def_weapon13"					"weapon_seekergrenade"
+	"weapon13_allowempty"			"0"
+	"weapon13_cycle"				"1"
+    
+    "def_weapon14"					"weapon_hackgrenade"
+	"weapon14_allowempty"			"0"
+	"weapon14_cycle"				"1"
+    
+    "def_weapon15"					"weapon_empgrenade"
+	"weapon15_allowempty"			"0"
+	"weapon15_cycle"				"1"
+    
+    
+    
+    
+    "def_weapon16"                  "weapon_emptybox"
+    "weapon16_carryable"			"1"
+    
+    "def_weapon17"                  "weapon_radio"
+    "weapon17_carryable"			"1"
+    
+	"def_weapon18"                  "weapon_aloeleaf"
+    "weapon18_carryable"			"1"
+	
+	"def_weapon19"                  "weapon_aloeplant"
+    "weapon19_carryable"			"1"
+	
+    "def_weapon20"                  "weapon_walkietalkie"
+    "weapon20_carryable"			"1"
+    
+    "def_weapon21"                  "weapon_book"
+    "weapon21_carryable"			"1"
+    
+    "def_weapon22"                  "weapon_itemboxlid"
+    "weapon22_carryable"			"1"
+    
+    "def_weapon23"                  "weapon_conduit"
+    "weapon23_carryable"			"1"
+    
+    "def_weapon24"                  "weapon_basketball"
+    "weapon24_carryable"			"1"
+    
+    "def_weapon25"                  "weapon_gascylinder"
+    "weapon25_carryable"			"1"
+    
+    "def_weapon26"                  "weapon_skullsaver"
+    "weapon26_carryable"			"1"
+    
+    "def_weapon27"                  "weapon_pepperbag"
+    "weapon27_carryable"			"1"
+    
+    "def_weapon28"                  "weapon_deodorant"    
+    "weapon28_carryable"			"1"
+    
+    "def_weapon29"                  "weapon_teapot"    
+    "weapon29_carryable"			"1"
+    
+    "def_weapon30"                  "weapon_glasspiece"    
+    "weapon30_carryable"			"1"
+    
+    "def_weapon31"                  "weapon_broachvalve"    
+    "weapon31_carryable"			"1"
+
+    "def_weapon32"                  "weapon_bananapeel"
+    "weapon32_carryable"			"1"
+    
+    "def_weapon33"                  "weapon_banana"
+    "weapon33_carryable"			"1"
+    
+    "def_weapon34"                  "weapon_reel"
+    "weapon34_carryable"			"1"
+    
+    "def_weapon35"                  "weapon_idcard"
+    "weapon35_carryable"			"1"
+	
+	"def_weapon36"					"weapon_emptysoda"
+	"weapon36_carryable"			"1"
+	
+	"def_weapon37"					"weapon_soda"
+	"weapon37_carryable"			"1"
+	
+	"def_weapon38"					"weapon_applecore"
+	"weapon38_carryable"			"1"
+    
+	"def_weapon39"					"weapon_emptytuna"
+	"weapon39_carryable"			"1"
+	
+	"def_weapon40"					"weapon_fishbones"
+	"weapon40_carryable"			"1"
+	
+	"def_weapon41"					"weapon_mug"
+	"weapon41_carryable"			"1"
+	
+	"def_weapon42"					"weapon_tumbler"
+	"weapon42_carryable"			"1"
+	
+	"def_weapon43"					"weapon_wrench"
+	"weapon43_carryable"			"1"
+	
+	"def_weapon44"					"weapon_catball"
+	"weapon44_carryable"			"1"
+	
+	"def_weapon45"					"weapon_tuna"
+	"weapon45_carryable"			"1"
+
+    //starting weaponry.
+	//"weapon"						"weapon_unarmed,weapon_autopistol,weapon_telegun,weapon_wiregrenade,weapon_tnt,weapon_shotgun,weapon_sonar,weapon_chembomb,weapon_baffler,weapon_lighter,weapon_rifle,weapon_mechcannon,weapon_signallamp"
+    
+    "weapon"						"weapon_unarmed"
+    
+    //what weapon to default to at gamestart.
+	"current_weapon"				"0"
+	
+	"dynamicSpectrum"	"1"
+	"trackInteractions"	"1"
+	"noFrustumCull"		"1"
+	"speakerName"					"#str_speaker_nina"	
+    
+    //Cache assets so that we're not loading them on-the-fly during gameplay.
+    "mtr_0001"                      "enemyhealthbar_outline"
+    "mtr_0002"                      "enemyhealthbar_bg"
+    "mtr_0003"                      "enemyhealthbar"
+    "mtr_0004"                      "guis/assets/crosshairfinger"
+    "mtr_0005"                      "guis/assets/suspicion_arc"
+    "mtr_0006"                      "guis/assets/suspicion_circle_bg"
+    "mtr_0007"                      "guis/assets/suspicion_circle_fg"
+    "mtr_0008"                      "textures/fx/sighted_vignette"
+    "mtr_0010"                      "guis/assets/healthdamageflash"    
+    "mtr_0011"                      "guis/assets/addmoreicon"
+    "mtr_0012"                      "enemyhealthbar_damagepip"
+    "mtr_0013"                      "enemyhealthbar_emptypip"
+    "mtr_0014"                      "shield_filled"
+    "mtr_0015"                      "textures/fx/confined_vignette"
+    "mtr_0016"                      "textures/decals/melee_scorch"
+    "mtr_0017"                      "textures/particles/star"
+    "mtr_0018"                      "icon_obj_releasecatcrew"
+    "mtr_0019"                      "guis/assets/controller/mouse_leftkey"
+    "mtr_0020"                      "guis/assets/controller/mouse_rightkey"
+    "mtr_0021"                      "guis/assets/interestpoint_iconsquare"
+    "mtr_0022"                      "guis/assets/eventlog_alarm_wiggle"
+    "mtr_0023"                      "guis/assets/eventlog_destroy"
+    
+    "model_0001"                    "smoke_ring01.prt"
+    "model_0002"                    "dust_cloud32.prt"
+    "model_0003"                    "smoke_ring15.prt"
+    "model_0004"                    "smoke_ring09.prt"
+    "model_0005"                    "melee_smoke.prt"
+    "model_0006"                    "melee_smoke_explode.prt"
+    "model_0007"                    "spaceparticles64.prt"
+    "model_0008"                    "sparkle_glass.prt"
+    "model_0009"                    "machine_sparkstream02.prt"
+    
+    "fx_0001"                       "fx/smoke_ring01"
+    "fx_0002"                       "fx/pickupitem"
+    "fx_0003"                       "fx/wind_local"
+    "fx_0004"                       "fx/frob_lines"
+    "fx_0005"                       "fx/explosion_item_carried"
+    "fx_0006"                       "fx/wind_local_short"
+    "fx_0007"                       "fx/smoke_longfall"
+    
+    "def_0001"                      "moveable_metalgibtiny1"
+    "def_0002"                      "moveable_metalgibtiny2"
+    "def_0003"                      "moveable_metalgibtiny3"
+    "def_0004"                      "moveable_metalgibtiny4"
+    "def_0005"                      "moveable_catpod"
+    "def_0006"                      "env_fireball"
+    
+    //"mtr_0014"                      "lkp_spawn"
+    //"mtr_0011"                      "damage_downed_dot"
+    //"mtr_0018"                      "interest_wallbullet_noise"
+    
+    //smoke_ring03.prt
+}
+
+entityDef player_doommarine_mp
+{
+    "editor_visibility"             "hidden"
+	"inherit" 						"player_doommarine"
+}
+
+model model_playerwatch
+{
+    mesh                            models/player/watch/watch.md5mesh
+    anim idle                       models/player/watch/idle.md5anim
+    anim raiseup                    models/player/watch/raiseup.md5anim
+    anim putaway                    models/player/watch/putaway.md5anim
+}
